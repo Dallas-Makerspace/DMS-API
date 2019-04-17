@@ -4,14 +4,16 @@ MakerManager, Calendar, Queue, and Inventory API
 
 ## Running
 
-1. Install docker for (windows, mac, linux)
+1. Install docker for (windows, mac, linux) and Dallas-Makerspace/CommunityGrid
 
 2. execute in a bash shell (git bash for windows, xterm/Terminal.app)
 
 ```
 git clone https://github.com/Dallas-Makerspace/DMS-API
-make stack=dmsapi_dev
+make STACK=dmsapi_dev VIRTUAL_HOST=dmsapi.testnet.dapla.net
 ```
+
+3. open https://dmsapi.testnet.dapla.net/api-docs/
 
 ## Notes
 
