@@ -44,6 +44,7 @@ SETTINGS = {
         'schemes': ['http', 'https'],
     },
     'X_DOMAINS': "*",
+    'X_HEADERS': "*",
     'X_ALLOW_CREDENTIALS': True,
     # backend schema
     'DOMAIN': DomainConfig({
