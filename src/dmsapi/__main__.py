@@ -43,6 +43,7 @@ SETTINGS = {
         },
         'schemes': ['http', 'https'],
     },
+    'RENDERERS': ['eve.render.JSONRenderer'],
     'X_DOMAINS': "*",
     'X_HEADERS': "*",
     'X_ALLOW_CREDENTIALS': True,
