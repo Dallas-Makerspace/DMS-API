@@ -4,7 +4,12 @@ MakerManager, Calendar, Queue, and Inventory API
 
 ## Running
 
+1. Install docker for (windows, mac, linux)
+
+2. execute in a bash shell (git bash for windows, xterm/Terminal.app)
+
 ```
+git clone https://github.com/Dallas-Makerspace/DMS-API
 make stack=dmsapi_dev
 ```
 
