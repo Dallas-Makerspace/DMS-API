@@ -1,4 +1,6 @@
 honcho
+redis
 eve
 eve-swagger
 eve-sqlalchemy
+sqlite3
