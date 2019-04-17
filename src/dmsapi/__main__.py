@@ -1,4 +1,7 @@
 ''' Trivial Eve-SQLAlchemy example. '''
+
+from os import environ
+
 from eve import Eve
 from eve_swagger import swagger
 
@@ -12,22 +15,42 @@ from eve_sqlalchemy.validation import ValidatorSQL
 
 Base = declarative_base()
 
-
-SETTINGS = {
-    'DEBUG': True,
-    'SQLALCHEMY_DATABASE_URI': os.environ.get("DATABASE_URI", 'sqlite://'),
-    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-    'DOMAIN': DomainConfig({
-        'people': ResourceConfig(People)
-    }).render()
-}
-
 class People(Base):
     __tablename__ = 'people'
     id = Column(Integer, primary_key=True, autoincrement=True)
     firstname = Column(String(80))
     lastname = Column(String(120))
     fullname = column_property(firstname + " " + lastname)
+
+
+SETTINGS = {
+    'DEBUG': True,
+    'SQLALCHEMY_DATABASE_URI': environ.get("DATABASE_URI", 'sqlite://'),
+    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+    # api documentation
+    'SWAGGER_INFO': {
+        'title': 'DMS API',
+        'version': '1.0',
+        'description': 'an API description',
+        'termsOfService': 'my terms of service',
+        'contact': {
+            'name': 'Dallas Makerspace',
+            'url': 'http://dallasmakerspace.org'
+        },
+        'license': {
+            'name': 'BSD',
+            'url': 'https://github.com/Dallas-Makerspace/DMS-API/blob/master/LICENSE',
+        },
+        'schemes': ['http', 'https'],
+    },
+    'X_DOMAINS': "*",
+    'X_ALLOW_CREDENTIALS': True,
+    # backend schema
+    'DOMAIN': DomainConfig({
+        'people': ResourceConfig(People)
+    }).render()
+}
+
 
 def main():
     app = Eve(auth=None, settings=SETTINGS, validator=ValidatorSQL, data=SQL)
