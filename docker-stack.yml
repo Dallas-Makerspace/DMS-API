@@ -1,0 +1,79 @@
+---
+version: '3.6'
+
+x-timezone: &default_timezone
+  TZ: "America/Chicago"
+
+x-network: &default_network
+  dns: '1.1.1.1'
+  dns_search: '${DOMAINNAME}'
+  networks:
+    public: {}
+
+x-proxy-env: &default_proxy
+  - http_proxy="http://proxy.local:8118"
+  - https_proxy="https://proxy.local:8118"
+  - socks_proxy="proxy.local:9051"
+  - no_proxy="127.0.0.1,localhost,.localdomain,.local"
+  - HTTP_PROXY="http://proxy.local:8118"
+  - HTTPS_PROXY="https://proxy.local:8118"
+  - SOCKS_PROXY="proxy.local:9051"
+  - NO_PROXY="127.0.0.1,localhost,.localdomain,.local"
+
+x-logging: &default_logging
+  driver: 'syslog'
+  options:
+    syslog-address: 'udp://telegraf.local:6514'
+
+x-deployment: &default_deployment
+  restart_policy:
+    condition: on-failure
+  mode: replicated
+  replicas: 1
+
+x-platform-enable: &enable_paas
+  traefik.frontend.priority: "5"
+  traefik.frontend.entryPoints: "http, https"
+  traefik.docker.network: "public"
+  traefik.enable: "true"
+  traefik.default.protocol: "http"
+  orbiter: "true"
+  orbiter.up: "3"
+  orbiter.down: "1"
+
+x-platform-disable: &disable_paas
+  traefik.enable: "false"
+  orbiter: "false"
+
+services:
+
+    web:
+        image: "${IMAGE_NAME}:latest"
+        depends_on:
+            - db
+        ports:
+            - "5000/tcp"
+        << : *default_network
+        deploy:
+            << : *default_deployment
+            labels:
+                << : *enable_paas
+                traefik.enable: "true"
+                traefik.port: "5000"
+                traefik.frontend.rule: "Host:${VIRTUAL_HOST}"
+                traefik.backend: "${STACK_NAME}"
+
+    db:
+        image: mongo:latest
+        networks:
+            public:
+                aliases:
+                    - db
+
+networks:
+    public:
+        external: true
+        name: ${NETWORK_NAME}
+
+...
+# vim: set sw=4 sts=4 ts=4 et ai number list:
